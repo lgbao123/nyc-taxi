@@ -60,6 +60,7 @@ x-airflow-common:
     AIRFLOW_CONN_GOOGLE_CLOUD_DEFAULT: 'google-cloud-platform://?extra__google_cloud_platform__key_path=/.google/credentials/google_credentials.json'
     GCP_PROJECT_ID: 'true-vista-335505'
     GCP_GCS_BUCKET: "bucket-nyc-data"
+    testt: ${test}
 
   volumes:
     - ./dags:/opt/airflow/dags

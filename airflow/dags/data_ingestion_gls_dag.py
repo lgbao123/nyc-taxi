@@ -110,10 +110,11 @@ FILE_LOCAL_PARQUET_PATH_TEMPLATE = f'{HOME_DIRECTORY}/{FILE_NAME}.parquet'
 FILE_CLOUD_PATH_TEMPLATE = f'raw/yellow_tripdata/{FILE_NAME}.parquet'
 
 yellow_taxi_dag = DAG(dag_id='ingest_yellow_taxi_to_cloud',
-          default_args=default_args,
-          max_active_runs=3,
-          start_date=datetime(2024,1,1),
-          schedule_interval='0 3 2 * *'
+            default_args=default_args,
+            max_active_runs=3,
+            start_date=datetime(2024,1,1),
+            schedule_interval='0 3 2 * *',
+            tags=['nyc-taxi'],
         )
 
 ingest_yellow_taxi_data = download_convert_upload_dag(dag=yellow_taxi_dag,url=URL_TEMPLATE,
@@ -132,10 +133,11 @@ FILE_LOCAL_PARQUET_PATH_TEMPLATE = f'{HOME_DIRECTORY}/{FILE_NAME}.parquet'
 FILE_CLOUD_PATH_TEMPLATE = f'raw/green_tripdata/{FILE_NAME}.parquet'
 
 green_taxi_dag = DAG(dag_id='ingest_green_taxi_to_cloud',
-          default_args=default_args,
-          max_active_runs=3,
-          start_date=datetime(2024,1,1),
-          schedule_interval='0 3 2 * *'
+            default_args=default_args,
+            max_active_runs=3,
+            start_date=datetime(2024,1,1),
+            schedule_interval='0 3 2 * *',
+            tags=['nyc-taxi'],
         )
 
 ingest_green_taxi_data = download_convert_upload_dag(dag=green_taxi_dag,url=URL_TEMPLATE,
@@ -155,12 +157,38 @@ FILE_LOCAL_PARQUET_PATH_TEMPLATE = f'{HOME_DIRECTORY}/{FILE_NAME}.parquet'
 FILE_CLOUD_PATH_TEMPLATE = f'raw/taxi_zone/{FILE_NAME}.parquet'
 
 zone_taxi_dag = DAG(dag_id='ingest_zone_taxi_to_cloud',
-          default_args=default_args,
-          max_active_runs=3,
-          start_date=days_ago(1)
+            default_args=default_args,
+            max_active_runs=3,
+            start_date=days_ago(1),
+            tags=['nyc-taxi'],
         )
 
 ingest_green_taxi_data = download_convert_upload_dag(dag=zone_taxi_dag,url=URL_TEMPLATE,
+                                                      file_gz_path=FILE_LOCAL_GZ_PATH_TEMPLATE,
+                                                      file_csv_path=FILE_LOCAL_CSV_PATH_TEMPLATE,
+                                                      file_parquet_path=FILE_LOCAL_PARQUET_PATH_TEMPLATE,
+                                                      file_cloud_path=FILE_CLOUD_PATH_TEMPLATE,
+                                                      bucket=BUCKET
+                                                    )
+
+# Ingest fhv taxi data
+FILE_NAME = 'fhv_tripdata_2019-01'
+URL_TEMPLATE = f'https://github.com/DataTalksClub/nyc-tlc-data/releases/download/fhv/{FILE_NAME}.csv.gz'
+
+FILE_LOCAL_CSV_PATH_TEMPLATE = f'{HOME_DIRECTORY}/{FILE_NAME}.csv'
+FILE_LOCAL_GZ_PATH_TEMPLATE = f'{HOME_DIRECTORY}/{FILE_NAME}.gz'
+FILE_LOCAL_PARQUET_PATH_TEMPLATE = f'{HOME_DIRECTORY}/{FILE_NAME}.parquet'
+FILE_CLOUD_PATH_TEMPLATE = f'raw/fhv_tripdata/{FILE_NAME}.parquet'
+
+fhv_taxi_dag = DAG(dag_id='ingest_fhv_taxi_to_cloud',
+            default_args=default_args,
+            max_active_runs=3,
+            start_date=datetime(2024,1,1),
+            schedule_interval='0 3 2 * *',
+            tags=['nyc-taxi'],
+        )
+
+ingest_green_taxi_data = download_convert_upload_dag(dag=fhv_taxi_dag,url=URL_TEMPLATE,
                                                       file_gz_path=FILE_LOCAL_GZ_PATH_TEMPLATE,
                                                       file_csv_path=FILE_LOCAL_CSV_PATH_TEMPLATE,
                                                       file_parquet_path=FILE_LOCAL_PARQUET_PATH_TEMPLATE,
